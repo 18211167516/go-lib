@@ -78,7 +78,9 @@ func Example_duartion_Round_Nanosecond() {
 }
 
 func Example_duartion_Truncate() {
-
+	tp, _ := time.ParseDuration("10508888788.9ns")
+	fmt.Println(tp.Truncate(time.Second))
+	// Output:10s
 }
 
 func Example_duartion_second() {
