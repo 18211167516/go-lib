@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"time"
@@ -9,22 +10,30 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
+type testJob struct{}
+
+func (t testJob) Run() {
+	panic("test job")
+	//fmt.Println("i.m test job")
+}
+
 func main() {
-	c := cron.New(cron.WithSeconds(), cron.WithLogger(
-		cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
+	f, _ := os.Create("cron.log")
 
+	logger := cron.VerbosePrintfLogger(log.New(io.MultiWriter(f, os.Stdout), "cron: ", log.LstdFlags))
+	c := cron.New(cron.WithChain(cron.Recover(logger)), cron.WithSeconds(), cron.WithLogger(logger))
+
+	c.AddJob("@every 1s", cron.NewChain(cron.Recover(cron.DefaultLogger)).Then(testJob{}))
 	c.AddFunc("*/2 * * * * *", func() {
-		file, _ := os.OpenFile("log.txt", os.O_APPEND|os.O_CREATE, 0755)
-		defer file.Close()
 		fmt.Println("test 11")
-		file.Write([]byte("test 111\r\n"))
 	})
 
-	c.AddFunc("*/5 * * * * *", func() {
-		time.Sleep(time.Second * 6)
-		fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
-		fmt.Println("test 222")
+	spce := fmt.Sprint("@every ", time.Duration(1)*time.Second)
+	c.AddFunc(spce, func() {
+		//panic("1232132")
 	})
+
+	//c.AddJob("* * * * * *", testJob{})
 
 	c.Start()
 
