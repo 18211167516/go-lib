@@ -18,11 +18,11 @@ func (t testJob) Run() {
 }
 
 func main() {
+	
 	f, _ := os.Create("cron.log")
 
 	logger := cron.VerbosePrintfLogger(log.New(io.MultiWriter(f, os.Stdout), "cron: ", log.LstdFlags))
 	c := cron.New(cron.WithChain(cron.Recover(logger)), cron.WithSeconds(), cron.WithLogger(logger))
-
 	c.AddJob("@every 1s", cron.NewChain(cron.Recover(cron.DefaultLogger)).Then(testJob{}))
 	c.AddFunc("*/2 * * * * *", func() {
 		fmt.Println("test 11")
