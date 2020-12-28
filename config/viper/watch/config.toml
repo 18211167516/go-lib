@@ -1,0 +1,10 @@
+log_level = "re"
+
+[mysql]
+  host = "yourhost"
+  name = "yourname"
+  password = "yourpassword"
+  user = "youruser"
+
+[redis]
+  port = "3306"

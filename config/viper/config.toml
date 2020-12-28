@@ -1,0 +1,7 @@
+log_level = "debug"
+
+[mysql]
+  host = "yourhost"
+  name = "yourname"
+  password = "yourpassword"
+  user = "youruser"

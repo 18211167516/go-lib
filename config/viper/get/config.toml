@@ -1,0 +1,14 @@
+log_level = "re"
+bool = true
+[mysql]
+  host = "yourhost"
+  name = "yourname"
+  password = "yourpassword"
+  user = "youruser"
+
+[redis]
+  port = 3306
+
+[time]
+  a = "2020-12-13"
+  d = "40ms"
