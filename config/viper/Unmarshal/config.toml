@@ -1,0 +1,15 @@
+log_level = "re"
+bool = true
+path_map = "随便"
+[mysql]
+  host = "yourhost"
+  name = "yourname"
+  password = "yourpassword"
+  user = "youruser"
+
+[redis]
+  port = 3306
+
+[time]
+  a = "2020-12-13 02:20:03"
+  d = "40ms"
