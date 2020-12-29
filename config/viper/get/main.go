@@ -30,4 +30,7 @@ func main() {
 	fmt.Println("time GetTime", viper.GetTime("time.a"), reflect.TypeOf(viper.GetTime("time.a")))
 	fmt.Println("time GetDuration", viper.GetDuration("time.d"), reflect.TypeOf(viper.GetDuration("time.d")))
 
+	fmt.Println("key is exits", viper.IsSet("key.a"))
+	fmt.Println("allkey", viper.AllSettings())
+
 }
