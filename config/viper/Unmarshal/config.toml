@@ -1,7 +1,7 @@
 log_level = "re"
-bool = true
 path_map = "随便"
 [mysql]
+  bool = true
   host = "yourhost"
   name = "yourname"
   password = "yourpassword"
