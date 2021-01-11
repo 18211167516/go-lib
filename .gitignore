@@ -2,3 +2,4 @@ http/*
 *.exe
 *.log
 cron/18211167516-robifig-cron/*
+email/*
