@@ -49,11 +49,11 @@ var emailCmd = &cobra.Command{
 	Short: "发送邮件",
 	Long:  `为了更便捷的发送邮件`,
 	Example: `
-	基础发送：mycmd email -c "内容" -t "baichonghua@urthink.com"
-	抄送：mycmd email -c "签到" -t "baichonghua@urthink.com" --cc "baichonghua@tansun.com.cn"
-	私密抄送：mycmd email -c "签到" -t "baichonghua@urthink.com" --bcc "baichonghua@tansun.com.cn"
-	发送html：mycmd email -c "签到" -t "baichonghua@urthink.com" --html='<a href="http://www.baidu.com">点击</a>'
-	发送附件：mycmd email -c "签到" -t "baichonghua@urthink.com" --file="./cmd.toml.example"
+	基础发送：mycmd email -c "内容" -t "youremail"
+	抄送：mycmd email -c "签到" -t "youremail" --cc "yourccemail"
+	私密抄送：mycmd email -c "签到" -t "youremail" --bcc "yourcccemail"
+	发送html：mycmd email -c "签到" -t "youremail" --html='<a href="http://www.baidu.com">点击</a>'
+	发送附件：mycmd email -c "签到" -t "youremail" --file="./cmd.toml.example"
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		send()
