@@ -1,0 +1,6 @@
+
+[email]
+  from = "yourfrom"
+  smtp = "yoursmtp"
+  port = yoursmtphost
+  password = "yourpassword"

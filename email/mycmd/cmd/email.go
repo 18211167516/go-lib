@@ -16,29 +16,60 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"net/smtp"
 
 	"github.com/jordan-wright/email"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+)
+
+var (
+	To  []string
+	Cc  []string
+	Bcc []string
+	//主题
+	Subject string
+	//内容
+	Text string
+	//html内容（优先）
+	HTML string
+	//抄送附件
+	AttachFileName string
+	From           string
+	Smtp           string
+	Port           int
+	Password       string
 )
 
 // emailCmd represents the email command
 var emailCmd = &cobra.Command{
 	Use:   "email",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "发送邮件",
+	Long:  `为了更便捷的发送邮件`,
+	Example: `
+	基础发送：mycmd email -c "内容" -t "baichonghua@urthink.com"
+	抄送：mycmd email -c "签到" -t "baichonghua@urthink.com" --cc "baichonghua@tansun.com.cn"
+	私密抄送：mycmd email -c "签到" -t "baichonghua@urthink.com" --bcc "baichonghua@tansun.com.cn"
+	发送html：mycmd email -c "签到" -t "baichonghua@urthink.com" --html='<a href="http://www.baidu.com">点击</a>'
+	发送附件：mycmd email -c "签到" -t "baichonghua@urthink.com" --file="./cmd.toml.example"
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		send()
 	},
 }
 
 func init() {
+	emailCmd.Flags().StringSliceVarP(&To, "to", "t", []string{}, "send email to")
+	emailCmd.Flags().StringSliceVar(&Cc, "cc", []string{}, "send email Cc")
+	emailCmd.Flags().StringSliceVar(&Bcc, "bcc", []string{}, "send email Bcc")
+	emailCmd.Flags().StringVarP(&Subject, "subject", "s", "默认主题", "send email Subject")
+	emailCmd.Flags().StringVarP(&Text, "context", "c", "", "send email Text")
+	emailCmd.Flags().StringVar(&HTML, "html", "", "send email HTML contect")
+	emailCmd.Flags().StringVar(&AttachFileName, "file", "", "send email AttachFile")
+	emailCmd.MarkFlagRequired("to")
+	emailCmd.MarkFlagRequired("context")
 	rootCmd.AddCommand(emailCmd)
 
 	// Here you will define your flags and configuration settings.
@@ -53,14 +84,28 @@ func init() {
 }
 
 func send() {
+	From = viper.GetString("email.from")
+	Smtp = viper.GetString("email.smtp")
+	Port = viper.GetInt("email.port")
+	Password = viper.GetString("email.password")
+
 	e := email.NewEmail()
-	e.From = "18211167516@163.com"
-	e.To = []string{"baichonghua@urthink.com", "baichonghua@tansun.com.cn"}
-	e.Subject = "签到"
-	e.Text = []byte("签到")
-	err := e.Send("smtp.163.com:25", smtp.PlainAuth("", "18211167516@163.com", "POYELVBXKMESIBIC", "smtp.163.com"))
+	e.From = From
+	e.To = To
+	e.Cc = Cc
+	e.Bcc = Bcc
+	e.Subject = Subject
+	e.AttachFile(AttachFileName)
+	if HTML != "" {
+		e.HTML = []byte(HTML)
+	} else {
+		e.Text = []byte(Text)
+	}
+	auth := smtp.PlainAuth("", From, Password, Smtp)
+	addr := fmt.Sprintf("%s:%d", Smtp, Port)
+	err := e.Send(addr, auth)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("email ", err)
 	}
 
 	log.Println("发送成功")
