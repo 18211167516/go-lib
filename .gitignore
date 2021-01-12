@@ -3,3 +3,5 @@ http/*
 *.log
 cron/18211167516-robifig-cron/*
 email/cmd.toml
+email/*.exe
+email/mycmd/mycmd
